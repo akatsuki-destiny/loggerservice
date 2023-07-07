@@ -10,21 +10,25 @@ import (
 	"loggerservice/pkg/utils"
 )
 
-func createDSN() string {
+var DSN *string
+
+// InitDSN is a function that initializes the data source name
+func InitDSN() {
 	dsn := fmt.Sprintf("mongodb://%s:%s@%s:%s",
 		config.EnvConfigs.MongoUser,
 		config.EnvConfigs.MongoPass,
 		config.EnvConfigs.MongoHost,
 		config.EnvConfigs.MongoPort)
 
-	return dsn
+	DSN = &dsn
 }
 
+// InitDB is a function that initializes the MongoDB client
 func InitDB() *mongo.Client {
 
 	log.Default().Println("Connecting to MongoDB...")
 
-	dbURI := createDSN()
+	dbURI := *DSN
 
 	clientOptions := options.Client().ApplyURI(dbURI)
 
@@ -39,6 +43,7 @@ func InitDB() *mongo.Client {
 	return client
 }
 
+// CloseDB is a function that closes the MongoDB connection
 func CloseDB(client *mongo.Client) {
 
 	log.Default().Println("Closing MongoDB connection...")
