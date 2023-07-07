@@ -20,6 +20,8 @@ func InitDSN() {
 		config.EnvConfigs.MongoHost,
 		config.EnvConfigs.MongoPort)
 
+	dsn += "/?connect=direct"
+
 	DSN = &dsn
 }
 

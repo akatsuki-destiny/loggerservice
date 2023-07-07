@@ -68,6 +68,7 @@ func SendSuccessLog(c *fiber.Ctx) error {
 	}
 
 	response.Data["inserted_id"] = insertedID
+	response.Data["collection"] = req.Collection
 
 	return c.Status(fiber.StatusOK).JSON(response)
 }
@@ -111,6 +112,7 @@ func SendErrLog(c *fiber.Ctx) error {
 	}
 
 	response.Data["inserted_id"] = insertedID
+	response.Data["collection"] = req.Collection
 
 	return c.Status(fiber.StatusOK).JSON(response)
 }
