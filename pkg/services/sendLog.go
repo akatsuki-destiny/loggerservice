@@ -7,7 +7,6 @@ import (
 	"loggerservice/pkg/config"
 	"loggerservice/pkg/data"
 	"loggerservice/pkg/data/entity"
-	"loggerservice/pkg/utils"
 	"time"
 )
 
@@ -36,11 +35,21 @@ func SendSuccessLog(c *fiber.Ctx) error {
 	var req SuccessLogRequest
 
 	err := json.Unmarshal(request.Body(), &req)
-	utils.LogErr("Error while unmarshal request body", err)
+	type ErrorResponse struct {
+		Status       string `json:"status"`
+		Error        error  `json:"error"`
+		ErrorMessage string `json:"error_message"`
+	}
 
 	validate := validator.New()
 	err = validate.Struct(req)
-	utils.LogErr("Error while validate request body", err)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
+			Status:       "failed",
+			Error:        err,
+			ErrorMessage: "invalid request body",
+		})
+	}
 
 	client := data.InitDB()
 	defer data.CloseDB(client)
@@ -58,7 +67,13 @@ func SendSuccessLog(c *fiber.Ctx) error {
 	}
 
 	result, err := collection.InsertOne(c.Context(), log)
-	utils.LogErr("Error while insert success log", err)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{
+			Status:       "failed",
+			Error:        err,
+			ErrorMessage: "failed to insert success log",
+		})
+	}
 
 	insertedID := result.InsertedID
 
@@ -81,11 +96,23 @@ func SendErrLog(c *fiber.Ctx) error {
 	var req ErrLogRequest
 
 	err := json.Unmarshal(request.Body(), &req)
-	utils.LogErr("Error while unmarshal request body", err)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
+			Status:       "failed",
+			Error:        err,
+			ErrorMessage: "invalid request body",
+		})
+	}
 
 	validate := validator.New()
 	err = validate.Struct(req)
-	utils.LogErr("Error while validate request body", err)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
+			Status:       "failed",
+			Error:        err,
+			ErrorMessage: "invalid request body",
+		})
+	}
 
 	client := data.InitDB()
 	defer data.CloseDB(client)
@@ -102,7 +129,13 @@ func SendErrLog(c *fiber.Ctx) error {
 	}
 
 	result, err := collection.InsertOne(c.Context(), log)
-	utils.LogErr("Error while insert success log", err)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{
+			Status:       "failed",
+			Error:        err,
+			ErrorMessage: "failed to insert error log",
+		})
+	}
 
 	insertedID := result.InsertedID
 
