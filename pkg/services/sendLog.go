@@ -35,10 +35,12 @@ func SendSuccessLog(c *fiber.Ctx) error {
 	var req SuccessLogRequest
 
 	err := json.Unmarshal(request.Body(), &req)
-	type ErrorResponse struct {
-		Status       string `json:"status"`
-		Error        error  `json:"error"`
-		ErrorMessage string `json:"error_message"`
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
+			Status:       "failed",
+			Error:        err,
+			ErrorMessage: "invalid request body",
+		})
 	}
 
 	validate := validator.New()

@@ -11,4 +11,5 @@ func RegisterRoutes(app *fiber.App) {
 	routes := app.Group("/api/v1/logger")
 	routes.Post("/success", services.SendSuccessLog)
 	routes.Post("/error", services.SendErrLog)
+	routes.Get("/log", services.GetLog)
 }
