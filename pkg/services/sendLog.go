@@ -11,12 +11,10 @@ import (
 )
 
 type SuccessLogRequest struct {
-	Collection     string `json:"collection" validate:"required"`
-	Source         string `json:"source"`
-	Request        string `json:"request"`
-	RequestHeader  string `json:"request_header"`
-	Response       string `json:"response"`
-	ResponseHeader string `json:"response_header"`
+	Collection string      `json:"collection" validate:"required"`
+	Source     string      `json:"source"`
+	Request    interface{} `json:"request"`
+	Response   interface{} `json:"response"`
 }
 
 type ErrLogRequest struct {
@@ -60,12 +58,10 @@ func SendSuccessLog(c *fiber.Ctx) error {
 	collection := db.Collection(req.Collection)
 
 	log := entity.SuccessLog{
-		Source:         req.Source,
-		Request:        req.Request,
-		RequestHeader:  req.RequestHeader,
-		Response:       req.Response,
-		ResponseHeader: req.ResponseHeader,
-		Timestamp:      time.Now(),
+		Source:    req.Source,
+		Request:   req.Request,
+		Response:  req.Response,
+		Timestamp: time.Now(),
 	}
 
 	result, err := collection.InsertOne(c.Context(), log)

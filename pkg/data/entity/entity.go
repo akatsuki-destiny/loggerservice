@@ -15,11 +15,9 @@ type ErrLog struct {
 }
 
 type SuccessLog struct {
-	ID             primitive.ObjectID `bson:"_id,omitempty"`
-	Source         string             `bson:"source"`
-	Request        string             `bson:"request"`
-	RequestHeader  string             `bson:"request_header"`
-	Response       string             `bson:"response"`
-	ResponseHeader string             `bson:"response_header"`
-	Timestamp      time.Time          `bson:"timestamp"`
+	ID        primitive.ObjectID `bson:"_id,omitempty"`
+	Source    string             `bson:"source"`
+	Request   interface{}        `bson:"request"`
+	Response  interface{}        `bson:"response"`
+	Timestamp time.Time          `bson:"timestamp"`
 }
